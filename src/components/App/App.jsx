@@ -68,12 +68,19 @@ export default class App extends Component {
             };
         });
     }
-    // Need refactor, DRY
-    onToggleImportant(id) {
+
+    propertySelector(id, property) {
         this.setState(({ data }) => {
             const index = data.findIndex((elem) => elem.id === id);
             const old = data[index];
-            const newItem = { ...old, important: !old.important };
+            let newItem;
+            if (property === 'important') {
+                newItem = { ...old, important: !old.important };
+            } else if (property === 'like') {
+                newItem = { ...old, like: !old.like };
+            } else {
+                console.log('Error');
+            }
             const newArr = [
                 ...data.slice(0, index),
                 newItem,
@@ -85,20 +92,12 @@ export default class App extends Component {
         });
     }
 
+    onToggleImportant(id) {
+        this.propertySelector(id, 'important');
+    }
+
     onToggleLiked(id) {
-        this.setState(({ data }) => {
-            const index = data.findIndex((elem) => elem.id === id);
-            const old = data[index];
-            const newItem = { ...old, like: !old.like };
-            const newArr = [
-                ...data.slice(0, index),
-                newItem,
-                ...data.slice(index + 1)
-            ];
-            return {
-                data: newArr
-            };
-        });
+        this.propertySelector(id, 'like');
     }
 
     searchPost(items, term) {
